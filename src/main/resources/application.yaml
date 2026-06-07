@@ -1,0 +1,48 @@
+server:
+  port: 8080
+
+spring:
+  main:
+    web-application-type: reactive   # ✅ MUST for Gateway
+
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      routes:
+
+        # 🔐 Auth Service
+        - id: auth-service
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/auth/**
+
+        # 👤 User Service
+        - id: user-service
+          uri: http://localhost:8087
+          predicates:
+            - Path=/api/users/**
+
+       # 📦 Product Service
+        - id: product-service
+          uri: http://localhost:8083
+          predicates:
+            - Path=/api/products/**
+       # 📦 Order Service
+        - id: order-service
+          uri: http://localhost:8084
+          predicates:
+             - Path=/api/orders/**
+       # 📦 Payment Service
+        - id: payment-service
+          uri: http://localhost:8085
+          predicates:
+             - Path=/api/payments/**
+
+jwt:
+  secret: MySuperSecretKeyForJwtTokenGeneration123456
+
+logging:
+  level:
+    org.springframework.security: DEBUG
